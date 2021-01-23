@@ -15,5 +15,11 @@ spec:
   - name: nginx
     image: makac/homework1:nginx
     imagePullPolicy: Always
+    readinessProbe:
+      httpGet:
+        path: /index.html
+        port: 8000
+    livenessProbe:
+      tcpSocket: { port: 8000 }
     volumeMounts: [{ name: app, mountPath: /app }]
   volumes: [{ name: app, emptyDir: {} }]
