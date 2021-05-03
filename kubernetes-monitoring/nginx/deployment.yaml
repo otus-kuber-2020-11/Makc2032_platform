@@ -1,0 +1,34 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  selector:
+     matchLabels:
+      app: nginx
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 20%
+      maxUnavailable: 10%
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      volumes:
+      - { name: nginx-conf, configMap: { name: nginx-config } }
+      containers:
+      - name: nginx
+        image: nginx:stable
+        imagePullPolicy: Always
+        ports: [{ name: http, containerPort: 80 }]
+        volumeMounts:
+        - { name: nginx-conf, subPath: nginx.conf, mountPath: /etc/nginx/nginx.conf, readOnly: true }
+      - name: nginx-exporter
+        image: nginx/nginx-prometheus-exporter:0.9.0
+        imagePullPolicy: Always
+        ports: [{ name: exporter, containerPort: 9113 }]
+        args: ['-nginx.scrape-uri', 'http://localhost:80/basic_status']
