@@ -1,0 +1,14 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: nginx-test
+  labels:
+    prometheus: default
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  endpoints:
+  - port: exporter
+    targetPort: 9113
+    path: /metrics
