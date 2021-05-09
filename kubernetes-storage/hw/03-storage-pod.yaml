@@ -4,13 +4,13 @@ metadata:
   name: storage-pod
 spec:
   containers:
-    - name: storage-pod
+    - name: test
       image: busybox
       volumeMounts:
       - mountPath: "/data"
-        name: volume
+        name: my-volume
       command: [ "sleep", "3600" ]
   volumes:
-    - name: volume
+    - name: my-volume
       persistentVolumeClaim:
         claimName: storage-pvc
